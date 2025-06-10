@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Lucro - Sistema de Plataformas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#409EFF',
+                        success: '#67C23A',
+                        warning: '#E6A23C',
+                        danger: '#F56C6C',
+                        info: '#7F8C8D',
+                        'gray-50': '#f5f7fa',
+                        'gray-100': '#DCDFE6',
+                        'gray-200': '#C9CDD4',
+                        'gray-300': '#606266',
+                        'gray-400': '#4E5969',
+                        'gray-500': '#303133',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'Arial', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+  
+  <style>
+    .platform-tab {
+      transition: all 0.3s ease;
+    }
+    
+    .platform-tab:hover {
+      background-color: #f3f4f6;
+    }
+    
+    .platform-tab.active {
+            background-color: #EBF3FF;
+            border-top: 3px solid #409EFF;
+            color: #409EFF;
+        }
+    
+    .result-card {
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 2px 8px; /* 减小内边距 */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .result-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4DB3FF 0%, #409EFF 100%);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #66B1FF 0%, #3A8EE6 100%);
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, #7ED321 0%, #67C23A 100%);
+    }
+    
+    .btn-success:hover {
+      background: linear-gradient(135deg, #85CE61 0%, #5DAF34 100%);
+    }
+    
+    .btn-danger {
+      background: linear-gradient(135deg, #FF7875 0%, #F56C6C 100%);
+    }
+    
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #F78989 0%, #DD6161 100%);
+    }
+    
+    .btn-warning {
+      background: linear-gradient(135deg, #FFBA5A 0%, #E6A23C 100%);
+    }
+    
+    .btn-warning:hover {
+      background: linear-gradient(135deg, #EEB964 0%, #CF9236 100%);
+    }
+    
+    .btn-info {
+      background: linear-gradient(135deg, #A8B2B9 0%, #7F8C8D 100%);
+    }
+    
+    .btn-info:hover {
+      background: linear-gradient(135deg, #95A5A6 0%, #6C7879 100%);
+    }
+    
+    .input-field {
+      font-family: Arial;
+      font-size: 11pt;
+      padding: 8px 12px;
+      border: 2px solid #DCDFE6;
+      border-radius: 6px;
+      transition: border-color 0.3s;
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: #409EFF;
+      box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+    }
+    
+    .selling-price {
+      font-weight: bold;
+      color: #303133;
+    }
+    
+    .result-label {
+      font-family: Arial;
+      font-size: 10pt; /* 减小字体大小 */
+      color: #606266;
+      font-weight: 500;
+    }
+    
+    .result-value {
+      font-family: Arial;
+      font-size: 11pt; /* 减小字体大小 */
+      color: #303133;
+      font-weight: 600;
+    }
+    
+    .suggested-price {
+      font-size: 13pt; /* 减小字体大小 */
+      font-weight: bold;
+      color: #409EFF;
+    }
+    
+    .history-area {
+      background-color: #f5f7fa;
+      border: 2px solid #DCDFE6;
+      border-radius: 8px;
+      padding: 15px;
+      font-size: 11pt;
+      min-height: 300px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    /* 新增移动端适配样式 */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 50;
+            padding: 0.5rem;
+        }
+        
+        .mobile-nav-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .mobile-nav-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* 调整主内容区域的内边距，避免被底部导航遮挡 */
+        .main-content {
+            padding-bottom: 5rem;
+        }
+        
+        /* 响应式布局调整 */
+        @media (max-width: 768px) {
+            .results-container {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .action-buttons button {
+                width: 100%;
+            }
+        }
+  </style>
+</head>
+
+<body class="font-inter bg-gray-50 text-gray-500 min-h-screen">
+    <!-- 主要内容区域 -->
+    <div class="flex-1 flex flex-col min-h-screen">
+        <!-- 顶部导航栏 -->
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-lg font-semibold text-gray-500" id="platformTitle">Mercado Livre - Calculadora de Lucro</h1>
+                        <p class="text-xs text-gray-300" id="platformDescription">Configure os parâmetros e calcule o lucro</p>
+                    </div>
+                    
+                    <button onclick="clearAllInputs()" class="px-3 py-1 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200 transition-colors text-sm">
+                        <i class="fa fa-refresh mr-1"></i>Limpar
+                    </button>
+                </div>
+            </div>
+        </header>
+    
+    <!-- 底部平台选择导航 -->
+        <nav class="mobile-nav">
+            <div class="mobile-nav-scroll">
+                <div class="flex space-x-2 min-w-max">
+                    <button onclick="selectPlatform('mercado-livre')" id="nav-mercado-livre" class="platform-tab active flex items-center px-3 py-2 text-sm font-medium rounded-lg">
+                        <i class="fa fa-shopping-cart mr-2 text-blue-500"></i>
+                        <span>ML</span>
+                    </button>
+                    
+                    <button onclick="selectPlatform('shein')" id="nav-shein" class="platform-tab flex items-center px-3 py-2 text-sm font-medium rounded-lg">
+                        <span class="w-5 h-5 bg-black text-white text-xs font-bold rounded flex items-center justify-center mr-2">S</span>
+                        <span>SHEIN</span>
+                    </button>
+                    
+                    <button onclick="selectPlatform('shopee')" id="nav-shopee" class="platform-tab flex items-center px-3 py-2 text-sm font-medium rounded-lg">
+                        <i class="fa fa-shopping-bag mr-2 text-orange-500"></i>
+                        <span>SHOPEE</span>
+                    </button>
+                    
+                    <button onclick="selectPlatform('magalu')" id="nav-magalu" class="platform-tab flex items-center px-3 py-2 text-sm font-medium rounded-lg">
+                        <span class="w-5 h-5 bg-blue-600 text-white text-xs font-bold rounded flex items-center justify-center mr-2">M</span>
+                        <span>Magalu</span>
+                    </button>
+                    
+                    <button onclick="selectPlatform('amazon')" id="nav-amazon" class="platform-tab flex items-center px-3 py-2 text-sm font-medium rounded-lg">
+                        <i class="fa fa-amazon mr-2 text-yellow-600"></i>
+                        <span>Amazon</span>
+                    </button>
+                    
+                    <button onclick="selectPlatform('personalizado')" id="nav-personalizado" class="platform-tab flex items-center px-3 py-2 text-sm font-medium rounded-lg">
+                        <i class="fa fa-cog mr-2 text-gray-500"></i>
+                        <span>Custom</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+  <!-- 右侧主要内容区域 -->
+  <div class="flex-1 flex flex-col">
+    <!-- Barra de navegação superior -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="px-6">
+        <div class="flex items-center justify-between h-16">
+          <!-- 页面标题 -->
+          <div>
+            <h1 class="text-xl font-semibold text-gray-500" id="platformTitle">Mercado Livre - Calculadora de Lucro</h1>
+            <p class="text-sm text-gray-300" id="platformDescription">Configure os parâmetros e calcule o lucro</p>
+          </div>
+          
+          <!-- 操作按钮区域 -->
+          <div class="flex space-x-3">
+            <button onclick="clearAllInputs()" class="px-4 py-2 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200 transition-colors">
+              <i class="fa fa-refresh mr-2"></i>Limpar Tudo
+            </button>
+            <button onclick="exportHistory()" class="px-4 py-2 bg-info text-white rounded-lg hover:bg-info/90 transition-colors btn-info">
+              <i class="fa fa-download mr-2"></i>Exportar
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Área de conteúdo principal -->
+    <main class="flex-1 px-6 py-6 flex gap-6">
+      <!-- Área de entrada de dados -->
+      <div class="flex-1">
+        <!-- 结果区域 (移动到这里) -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <h2 class="text-lg font-semibold text-gray-500 mb-2">Resultados</h2>
+          
+          <div class="results-container">
+            <div class="result-card bg-gray-50 rounded-lg">
+              <div class="result-label">Lucro Líquido</div>
+              <div class="result-value" id="netProfitValue">R$ 0,00</div>
+            </div>
+            
+            <div class="result-card bg-gray-50 rounded-lg">
+              <div class="result-label">Taxa de Lucro</div>
+              <div class="result-value" id="profitRateValue">0,00%</div>
+            </div>
+            
+            <div class="result-card bg-blue-50 rounded-lg">
+              <div class="result-label">Preço Sugerido</div>
+              <div class="result-value suggested-price" id="suggestedPriceValue">R$ 0,00</div>
+            </div>
+            
+            <div class="result-card bg-gray-50 rounded-lg">
+              <div class="result-label">Lucro Esperado</div>
+              <div class="result-value" id="expectedProfitValue">R$ 0,00</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Formulário de entrada -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <h2 class="text-lg font-semibold text-gray-500 mb-4">Dados do Produto</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Modelo do Produto</label>
+              <input type="text" id="productModel" class="input-field w-full" placeholder="Digite o modelo do produto">
+            </div>
+            
+            <div class="md:col-span-2 grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Preço de Custo (R$)</label>
+                <input type="text" id="costPrice" class="input-field w-full" value="0,00" oninput="formatCurrency(this)">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Taxa de Nota Fiscal (%)</label>
+                <input type="text" id="invoiceRate" class="input-field w-full" value="8,00" oninput="formatPercentage(this)">
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Preço de Venda (R$)</label>
+              <input type="text" id="sellingPrice" class="input-field selling-price w-full" value="0,00" oninput="formatCurrency(this)">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Frete (R$)</label>
+              <input type="text" id="shippingFee" class="input-field w-full" value="20,00" oninput="formatCurrency(this)">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Taxa da Plataforma (%)</label>
+              <div class="flex flex-col gap-2">
+                <input type="text" id="platformFeeRate" class="input-field w-full" value="11,50" oninput="formatPercentage(this)">
+                <div id="mlRateOptions" class="flex gap-4 text-sm">
+                  <label class="flex items-center">
+                    <input type="radio" name="mlRate" value="11.5" checked class="mr-1"> Normal (11,5%)
+                  </label>
+                  <label class="flex items-center">
+                    <input type="radio" name="mlRate" value="16.5" class="mr-1"> Premium (16,5%)
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Taxa do Item (R$)</label>
+              <input type="text" id="itemFee" class="input-field w-full" value="0,00" oninput="formatCurrency(this)">
+            </div>
+            
+            <div class="md:col-span-2 grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Taxa de Lucro Alvo (%)</label>
+                <input type="text" id="targetProfitRate" class="input-field w-full" value="0,00" oninput="formatPercentage(this)">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Custo de Embalagem (R$)</label>
+                <input type="text" id="materialCost" class="input-field w-full" value="0,00" oninput="formatCurrency(this)">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Botões de ação -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <div class="flex flex-wrap gap-3">
+            <button onclick="calculateProfit()" class="px-6 py-2 text-white rounded-lg transition-colors btn-primary">
+              <i class="fa fa-calculator mr-2"></i>Calcular Lucro
+            </button>
+            <button onclick="suggestPrice()" class="px-6 py-2 text-white rounded-lg transition-colors btn-success">
+              <i class="fa fa-lightbulb-o mr-2"></i>Sugerir Preço
+            </button>
+            <button onclick="clearInputs()" class="px-6 py-2 text-white rounded-lg transition-colors btn-danger">
+              <i class="fa fa-eraser mr-2"></i>Limpar
+            </button>
+            <button onclick="compareAllPlatforms()" class="px-6 py-2 text-white rounded-lg transition-colors btn-warning">
+              <i class="fa fa-balance-scale mr-2"></i>Comparar
+            </button>
+            <button onclick="copyPrices()" class="px-6 py-2 text-white rounded-lg transition-colors btn-info">
+              <i class="fa fa-copy mr-2"></i>Copiar Preços
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Área lateral direita - Histórico e informações -->
+      <div class="w-[28rem]">
+        <!-- Informações da plataforma -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <h3 class="text-lg font-semibold text-gray-500 mb-4">Informações da Plataforma</h3>
+          <div id="platformInfo" class="text-sm text-gray-400">
+            <!-- Informações específicas da plataforma serão inseridas aqui -->
+          </div>
+        </div>
+        
+        <!-- Histórico de cálculos -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-500">Histórico de Cálculos</h3>
+            <button onclick="clearHistory()" class="px-3 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200 transition-colors">
+              <i class="fa fa-trash mr-1"></i>Limpar
+            </button>
+          </div>
+          <div id="historyArea" class="history-area">
+            <p class="text-gray-400 text-center">Nenhum cálculo realizado ainda.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Variáveis globais
+    let currentPlatform = 'mercado-livre';
+    let calculationHistory = [];
+    
+    // Configurações das plataformas
+    let platformConfigs = {
+      'mercado-livre': {
+        name: 'Mercado Livre',
+        invoiceRate: 8,
+        platformFeeRate: 11.5,
+        shippingFee: 20,
+        itemFee: 0,
+        info: 'Mercado Livre: Taxa normal 11,5% ou Premium 16,5%. Frete grátis para pedidos abaixo de R$ 79.'
+      },
+      'shein': {
+        name: 'SHEIN',
+        invoiceRate: 8,
+        platformFeeRate: 16,
+        shippingFee: 0,
+        itemFee: 5,
+        info: 'SHEIN: Taxa fixa de 16%. Taxa do item R$ 5,00. Sem frete. Peso volum.(kg)=(Comp.[cm] × Larg.[cm] × Alt.[cm]) ÷ 6000'
+      },
+      'shopee': {
+        name: 'SHOPEE',
+        invoiceRate: 8,
+        platformFeeRate: 20,
+        shippingFee: 0,
+        itemFee: 4,
+        info: 'SHOPEE: Taxa de 20% (máximo R$ 100). Taxa do item R$ 4,00. Sem frete.'
+      },
+      'magalu': {
+        name: 'Magalu',
+        invoiceRate: 8,
+        platformFeeRate: 18,
+        shippingFee: 0,
+        itemFee: 5,
+        info: 'Magalu: Taxa de 18%. Taxa do item R$ 5,00. Frete R$ 17,95 para pedidos acima de R$ 79.'
+      },
+      'amazon': {
+        name: 'Amazon',
+        invoiceRate: 8,
+        platformFeeRate: 12,
+        shippingFee: 0,
+        itemFee: 2,
+        info: 'Amazon: Taxa de 12%. Taxa do item R$ 2,00 (Plano Individual).'
+      },
+      'personalizado': {
+        name: 'Personalizado',
+        invoiceRate: 8,
+        platformFeeRate: 0,
+        shippingFee: 0,
+        itemFee: 0,
+        info: 'Plataforma personalizada: Configure todos os valores manualmente.'
+      }
+    };
+    
+    // Função para selecionar plataforma
+    function selectPlatform(platform) {
+      // Remove active class from all tabs
+      document.querySelectorAll('.platform-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Add active class to selected tab
+      document.getElementById(`nav-${platform}`).classList.add('active');
+      
+      currentPlatform = platform;
+      const config = platformConfigs[platform];
+      
+      // Update title
+      document.getElementById('platformTitle').textContent = `${config.name} - Calculadora de Lucro`;
+      
+      // Update platform info
+      document.getElementById('platformInfo').textContent = config.info;
+      
+      // Update form values
+      document.getElementById('invoiceRate').value = formatNumber(config.invoiceRate);
+      document.getElementById('platformFeeRate').value = formatNumber(config.platformFeeRate);
+      document.getElementById('shippingFee').value = formatNumber(config.shippingFee);
+      document.getElementById('itemFee').value = formatNumber(config.itemFee);
+      
+      // 同步当前平台的Taxa de Nota Fiscal到所有其他平台（除了个性化平台）
+      Object.keys(platformConfigs).forEach(p => {
+        if (p !== 'personalizado' && p !== platform) {
+          platformConfigs[p].invoiceRate = config.invoiceRate;
+        }
+      });
+      
+      // Show/hide ML rate options
+      const mlOptions = document.getElementById('mlRateOptions');
+      if (platform === 'mercado-livre') {
+        mlOptions.style.display = 'flex';
+      } else {
+        mlOptions.style.display = 'none';
+      }
+      
+      // Set readonly states based on platform
+      setFieldReadonlyStates(platform);
+      
+      // 自动重新计算结果
+      calculateProfit();
+      
+      // 自动重新计算建议价格
+      const targetProfitRate = parseNumber(document.getElementById('targetProfitRate').value);
+      if (targetProfitRate > 0) {
+        suggestPrice();
+      }
+    }
+    
+    // Função para definir campos somente leitura
+    function setFieldReadonlyStates(platform) {
+      const fields = {
+        invoiceRate: document.getElementById('invoiceRate'),
+        platformFeeRate: document.getElementById('platformFeeRate'),
+        shippingFee: document.getElementById('shippingFee'),
+        itemFee: document.getElementById('itemFee')
+      };
+      
+      // Reset all fields to editable
+      Object.values(fields).forEach(field => {
+        field.readOnly = false;
+        field.style.backgroundColor = '#ffffff';
+      });
+      
+      // Set readonly based on platform
+      switch(platform) {
+        case 'mercado-livre':
+          fields.shippingFee.readOnly = true;
+          fields.itemFee.readOnly = true;
+          fields.shippingFee.style.backgroundColor = '#f5f7fa';
+          fields.itemFee.style.backgroundColor = '#f5f7fa';
+          break;
+        case 'shein':
+          fields.platformFeeRate.readOnly = true;
+          fields.shippingFee.readOnly = true;
+          fields.platformFeeRate.style.backgroundColor = '#f5f7fa';
+          fields.shippingFee.style.backgroundColor = '#f5f7fa';
+          break;
+        case 'shopee':
+          fields.platformFeeRate.readOnly = true;
+          fields.shippingFee.readOnly = true;
+          fields.itemFee.readOnly = true;
+          fields.platformFeeRate.style.backgroundColor = '#f5f7fa';
+          fields.shippingFee.style.backgroundColor = '#f5f7fa';
+          fields.itemFee.style.backgroundColor = '#f5f7fa';
+          break;
+        case 'magalu':
+          fields.shippingFee.readOnly = true;
+          fields.itemFee.readOnly = true;
+          fields.shippingFee.style.backgroundColor = '#f5f7fa';
+          fields.itemFee.style.backgroundColor = '#f5f7fa';
+          break;
+        case 'amazon':
+          fields.shippingFee.readOnly = true;
+          fields.shippingFee.style.backgroundColor = '#f5f7fa';
+          break;
+      }
+    }
+    
+    // Funções de formatação
+    function formatCurrency(input) {
+      let value = input.value.replace(/[^\d,]/g, '');
+      if (value.includes(',')) {
+        let parts = value.split(',');
+        if (parts[1] && parts[1].length > 2) {
+          parts[1] = parts[1].substring(0, 2);
+        }
+        value = parts.join(',');
+      }
+      input.value = value;
+    }
+    
+    function formatPercentage(input) {
+      formatCurrency(input);
+    }
+    
+    function formatNumber(num) {
+      return num.toFixed(2).replace('.', ',');
+    }
+    
+    function parseNumber(str) {
+      return parseFloat(str.replace(',', '.')) || 0;
+    }
+    
+    // Função para calcular lucro
+    function calculateProfit() {
+      const sellingPrice = parseNumber(document.getElementById('sellingPrice').value);
+      const costPrice = parseNumber(document.getElementById('costPrice').value);
+      const invoiceRate = parseNumber(document.getElementById('invoiceRate').value) / 100;
+      let platformFeeRate = parseNumber(document.getElementById('platformFeeRate').value) / 100;
+      let shippingFee = parseNumber(document.getElementById('shippingFee').value);
+      let itemFee = parseNumber(document.getElementById('itemFee').value);
+      const materialCost = parseNumber(document.getElementById('materialCost').value);
+      
+      // 为 Mercado Livre 添加动态费用计算
+      if (currentPlatform === 'mercado-livre') {
+        // 获取选择的费率
+        const selectedRate = document.querySelector('input[name="mlRate"]:checked');
+        if (selectedRate) {
+          platformFeeRate = parseFloat(selectedRate.value) / 100;
+          document.getElementById('platformFeeRate').value = formatNumber(parseFloat(selectedRate.value));
+        }
+        
+        // 动态计算运费
+        shippingFee = sellingPrice < 79 ? 0 : 20;
+        document.getElementById('shippingFee').value = formatNumber(shippingFee);
+        
+        // 动态计算商品费用
+        if (sellingPrice < 79) {
+          if (sellingPrice >= 12.50 && sellingPrice < 29.00) {
+            itemFee = 6.25;
+          } else if (sellingPrice >= 29.00 && sellingPrice < 50.00) {
+            itemFee = 6.50;
+          } else if (sellingPrice >= 50.00 && sellingPrice < 79.00) {
+            itemFee = 6.75;
+          } else {
+            itemFee = 0;
+          }
+        } else {
+          itemFee = 0;
+        }
+        document.getElementById('itemFee').value = formatNumber(itemFee);
+      }
+      
+      // 计算当前平台的利润（保持原有功能）
+  const invoiceFee = sellingPrice * invoiceRate;
+  let platformFee = sellingPrice * platformFeeRate;
+  
+  // 应用 SHOPEE 限制
+  if (currentPlatform === 'shopee') {
+    platformFee = Math.min(platformFee, 100);
+  }
+  
+  const totalCosts = costPrice + invoiceFee + platformFee + shippingFee + itemFee + materialCost;
+  const netProfit = sellingPrice - totalCosts;
+  const profitRate = sellingPrice > 0 ? (netProfit / sellingPrice) * 100 : 0;
+  
+  // 更新当前平台结果
+  document.getElementById('netProfitValue').textContent = `R$ ${formatNumber(netProfit)}`;
+  document.getElementById('profitRateValue').textContent = `${formatNumber(profitRate)}%`;
+  
+  // 添加到历史记录
+  addToHistory({
+    platform: platformConfigs[currentPlatform].name,
+    model: document.getElementById('productModel').value || 'Sem modelo',
+    sellingPrice,
+    netProfit,
+    profitRate,
+    timestamp: new Date().toLocaleString('pt-BR')
+  });
+  
+  // 移除这一行，这样点击calcular lucro按钮时就不会显示平台对比表格了
+  // calculateAllPlatformsProfits(sellingPrice, costPrice, materialCost);
+    }
+    
+    // 新增函数：计算所有平台的利润
+    function calculateAllPlatformsProfits(sellingPrice, costPrice, materialCost) {
+      if (!sellingPrice || sellingPrice <= 0) {
+        return; // 如果没有销售价格，不显示比较
+      }
+      
+      // 获取当前选择的 Mercado Livre 费率
+      const selectedMLRate = document.querySelector('input[name="mlRate"]:checked');
+      const mlPlatformFeeRate = selectedMLRate ? parseFloat(selectedMLRate.value) / 100 : 0.115;
+      
+      // 定义所有平台的配置
+      const allPlatforms = {
+        'mercado-livre': {
+          name: 'Mercado Livre',
+          platformFeeRate: mlPlatformFeeRate, // 使用用户选择的费率
+          invoiceRate: platformConfigs['mercado-livre'].invoiceRate / 100, // 使用配置中的值
+          calculateFees: (price) => {
+            let shipping = price < 79 ? 0 : 20;
+            let itemFee = 0;
+            if (price < 79) {
+              if (price >= 12.50 && price < 29.00) itemFee = 6.25;
+              else if (price >= 29.00 && price < 50.00) itemFee = 6.50;
+              else if (price >= 50.00 && price < 79.00) itemFee = 6.75;
+            }
+            return { shipping, itemFee };
+          }
+        },
+        'shein': {
+          name: 'SHEIN',
+          platformFeeRate: 0.16, // 16%
+          invoiceRate: platformConfigs['shein'].invoiceRate / 100, // 使用配置中的值
+          calculateFees: () => ({ shipping: 0, itemFee: 5 })
+        },
+        'shopee': {
+          name: 'SHOPEE',
+          platformFeeRate: 0.20, // 20%
+          invoiceRate: platformConfigs['shopee'].invoiceRate / 100, // 使用配置中的值
+          calculateFees: () => ({ shipping: 0, itemFee: 4 })
+        },
+        'magalu': {
+          name: 'Magalu',
+          platformFeeRate: 0.18, // 18%
+          invoiceRate: platformConfigs['magalu'].invoiceRate / 100, // 使用配置中的值
+          calculateFees: (price) => ({ 
+            shipping: price < 79 ? 0 : 17.95, 
+            itemFee: 5 
+          })
+        },
+        'amazon': {
+          name: 'Amazon',
+          platformFeeRate: 0.12, // 12%
+          invoiceRate: platformConfigs['amazon'].invoiceRate / 100, // 使用配置中的值
+          calculateFees: () => ({ shipping: 21.45, itemFee: 2 })
+        }
+      };
+      
+      // 计算每个平台的利润
+      const results = [];
+      
+      Object.entries(allPlatforms).forEach(([key, config]) => {
+        const fees = config.calculateFees(sellingPrice);
+        const invoiceFee = sellingPrice * config.invoiceRate;
+        let platformFee = sellingPrice * config.platformFeeRate;
+        
+        // 应用 SHOPEE 限制
+        if (key === 'shopee') {
+          platformFee = Math.min(platformFee, 100);
+        }
+        
+        const totalCosts = costPrice + invoiceFee + platformFee + fees.shipping + fees.itemFee + materialCost;
+        const netProfit = sellingPrice - totalCosts;
+        const profitRate = sellingPrice > 0 ? (netProfit / sellingPrice) * 100 : 0;
+        
+        results.push({
+          platform: config.name,
+          netProfit,
+          profitRate,
+          isCurrentPlatform: key === currentPlatform
+        });
+      });
+      
+      // 显示比较表格
+      showPlatformComparison(results);
+    }
+    
+    // 显示平台比较表格
+    function showPlatformComparison(results) {
+      // 创建模态框
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      `;
+      
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 90%;
+        max-height: 90%;
+        overflow: auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      `;
+      
+      // 创建标题
+      const title = document.createElement('h2');
+      title.textContent = 'Comparação de Lucros - Todas as Plataformas';
+      title.style.cssText = `
+        margin: 0 0 20px 0;
+        color: #303133;
+        text-align: center;
+        font-family: Arial, sans-serif;
+      `;
+      
+      // 创建表格
+      const table = document.createElement('table');
+      table.style.cssText = `
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        border: 1px solid #DCDFE6;
+        border-radius: 4px;
+        overflow: hidden;
+      `;
+      
+      // 创建表头
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      const headers = ['Plataforma', 'Lucro Líquido', 'Taxa de Lucro'];
+      
+      headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        th.style.cssText = `
+          background-color: #F5F7FA;
+          color: #303133;
+          font-weight: bold;
+          padding: 12px 8px;
+          text-align: center;
+          border-bottom: 1px solid #DCDFE6;
+          font-size: 11pt;
+          font-family: Arial, sans-serif;
+        `;
+        headerRow.appendChild(th);
+      });
+      
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+      
+      // 创建表体
+      const tbody = document.createElement('tbody');
+      
+      // 按利润排序（从高到低）
+      results.sort((a, b) => b.netProfit - a.netProfit);
+      
+      results.forEach(result => {
+        const row = document.createElement('tr');
+        
+        // 如果是当前平台，高亮显示
+        if (result.isCurrentPlatform) {
+          row.style.backgroundColor = '#E6F7FF';
+        }
+        
+        const cells = [
+          result.platform + (result.isCurrentPlatform ? ' (Atual)' : ''),
+          `R$ ${formatNumber(result.netProfit)}`,
+          `${formatNumber(result.profitRate)}%`
+        ];
+        
+        cells.forEach((cellText, index) => {
+          const td = document.createElement('td');
+          td.textContent = cellText;
+          td.style.cssText = `
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #EBEEF5;
+            color: #303133;
+            font-family: Arial, sans-serif;
+            ${index === 0 && result.isCurrentPlatform ? 'font-weight: bold;' : ''}
+          `;
+          
+          // 为利润值添加颜色
+          if (index === 1) {
+            td.style.color = result.netProfit >= 0 ? '#67C23A' : '#F56C6C';
+            td.style.fontWeight = 'bold';
+          }
+          
+          row.appendChild(td);
+        });
+        
+        tbody.appendChild(row);
+      });
+      
+      table.appendChild(tbody);
+      
+      // 创建关闭按钮
+      const closeButton = document.createElement('button');
+      closeButton.textContent = 'Fechar';
+      closeButton.style.cssText = `
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #409EFF;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      `;
+      
+      closeButton.addEventListener('click', () => {
+        document.body.removeChild(modal);
+      });
+      
+      // 组装模态框
+      modalContent.appendChild(title);
+      modalContent.appendChild(table);
+      modalContent.appendChild(closeButton);
+      modal.appendChild(modalContent);
+      
+      // 点击背景关闭
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          document.body.removeChild(modal);
+        }
+      });
+      
+      // 添加到页面
+      document.body.appendChild(modal);
+    }
+    
+    function suggestPrice() {
+      const costPrice = parseNumber(document.getElementById('costPrice').value);
+      const targetProfitRate = parseNumber(document.getElementById('targetProfitRate').value) / 100;
+      const invoiceRate = parseNumber(document.getElementById('invoiceRate').value) / 100;
+      const platformFeeRate = parseNumber(document.getElementById('platformFeeRate').value) / 100;
+      const shippingFee = parseNumber(document.getElementById('shippingFee').value);
+      const itemFee = parseNumber(document.getElementById('itemFee').value);
+      const materialCost = parseNumber(document.getElementById('materialCost').value);
+      
+      if (targetProfitRate <= 0) {
+        alert('Por favor, defina uma taxa de lucro alvo maior que 0%.');
+        return;
+      }
+      
+      // Cálculo do preço sugerido
+      const fixedCosts = costPrice + shippingFee + itemFee + materialCost;
+      const suggestedPrice = fixedCosts / (1 - targetProfitRate - invoiceRate - platformFeeRate);
+      
+      document.getElementById('suggestedPriceValue').textContent = `R$ ${formatNumber(suggestedPrice)}`;
+      // document.getElementById('sellingPrice').value = formatNumber(suggestedPrice); // 注释掉这行，不再自动填充售价
+      
+      // Calcular lucro esperado
+      const expectedProfit = suggestedPrice * targetProfitRate;
+      document.getElementById('expectedProfitValue').textContent = `R$ ${formatNumber(expectedProfit)}`;
+    }
+    
+    // Função para adicionar ao histórico
+    function addToHistory(calculation) {
+      // 检查是否存在重复的计算结果
+      const isDuplicate = calculationHistory.some(existing => 
+        existing.platform === calculation.platform &&
+        existing.model === calculation.model &&
+        existing.sellingPrice === calculation.sellingPrice &&
+        existing.netProfit === calculation.netProfit &&
+        existing.profitRate === calculation.profitRate
+      );
+      
+      // 如果不是重复的，才添加到历史记录
+      if (!isDuplicate) {
+        calculationHistory.unshift(calculation);
+        if (calculationHistory.length > 10) {
+          calculationHistory.pop();
+        }
+        updateHistoryDisplay();
+      }
+    }
+    
+    // Função para atualizar exibição do histórico
+    function updateHistoryDisplay() {
+      const historyArea = document.getElementById('historyArea');
+      
+      if (calculationHistory.length === 0) {
+        historyArea.innerHTML = '<p class="text-gray-400 text-center">Nenhum cálculo realizado ainda.</p>';
+        return;
+      }
+      
+      const historyHtml = calculationHistory.map(calc => `
+        <div class="border-b border-gray-100 pb-3 mb-3 last:border-b-0">
+          <div class="flex justify-between items-start mb-1">
+            <span class="font-medium text-gray-500">${calc.platform}</span>
+            <span class="text-xs text-gray-300">${calc.timestamp}</span>
+          </div>
+          <div class="text-sm text-gray-400">
+            <div>Modelo: ${calc.model}</div>
+            <div>Preço: R$ ${formatNumber(calc.sellingPrice)}</div>
+            <div class="flex justify-between">
+              <span>Lucro: R$ ${formatNumber(calc.netProfit)}</span>
+              <span>${formatNumber(calc.profitRate)}%</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      
+      historyArea.innerHTML = historyHtml;
+    }
+    
+    // Outras funções
+    function clearInputs() {
+      document.getElementById('productModel').value = '';
+      document.getElementById('costPrice').value = '0,00';
+      document.getElementById('sellingPrice').value = '0,00';
+      document.getElementById('materialCost').value = '0,00';
+      document.getElementById('targetProfitRate').value = '0,00';
+      
+      // Reset results
+      document.getElementById('netProfitValue').textContent = 'R$ 0,00';
+      document.getElementById('profitRateValue').textContent = '0,00%';
+      document.getElementById('suggestedPriceValue').textContent = 'R$ 0,00';
+      document.getElementById('expectedProfitValue').textContent = 'R$ 0,00';
+    }
+    
+    function clearAllInputs() {
+      clearInputs();
+      selectPlatform(currentPlatform); // Reset platform defaults
+    }
+    
+    function clearHistory() {
+      calculationHistory = [];
+      updateHistoryDisplay();
+    }
+    
+    function copyPrices() {
+      const productModel = document.getElementById('productModel').value;
+      const costPrice = document.getElementById('costPrice').value;
+      const sellingPrice = document.getElementById('sellingPrice').value;
+      const invoiceRate = document.getElementById('invoiceRate').value;
+      const materialCost = document.getElementById('materialCost').value;
+      const targetProfitRate = document.getElementById('targetProfitRate').value;
+      
+      // 同步所有平台的Taxa de Nota Fiscal（包括personalizado）
+      const invoiceRateValue = parseNumber(invoiceRate);
+      Object.keys(platformConfigs).forEach(platform => {
+        platformConfigs[platform].invoiceRate = invoiceRateValue;
+      });
+      
+      const copyText = `Modelo: ${productModel}\nPreço de Custo: R$ ${costPrice}\nPreço de Venda: R$ ${sellingPrice}\nTaxa de Nota Fiscal: ${invoiceRate}%\nCusto de Embalagem: R$ ${materialCost}\nTaxa de Lucro Alvo: ${targetProfitRate}%`;
+      
+      navigator.clipboard.writeText(copyText).then(() => {
+        alert('Dados do produto copiados para a área de transferência!\nTaxa de Nota Fiscal sincronizada em todas as plataformas (incluindo personalizado)!');
+      });
+    }
+    
+    function compareAllPlatforms() {
+      // 获取当前输入的数据
+      const sellingPrice = parseNumber(document.getElementById('sellingPrice').value);
+      const costPrice = parseNumber(document.getElementById('costPrice').value);
+      const materialCost = parseNumber(document.getElementById('materialCost').value);
+      
+      // 显示平台比较表格
+      calculateAllPlatformsProfits(sellingPrice, costPrice, materialCost);
+    }
+    
+    function exportHistory() {
+      if (calculationHistory.length === 0) {
+        alert('Nenhum histórico para exportar.');
+        return;
+      }
+      
+      const csvContent = 'data:text/csv;charset=utf-8,' + 
+        'Plataforma,Modelo,Preço de Venda,Lucro Líquido,Taxa de Lucro,Data\n' +
+        calculationHistory.map(calc => 
+          `${calc.platform},${calc.model},${calc.sellingPrice},${calc.netProfit},${calc.profitRate}%,${calc.timestamp}`
+        ).join('\n');
+      
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'historico_calculos.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+    
+    // Event listeners para ML rate options
+    document.addEventListener('DOMContentLoaded', function() {
+      const mlRateInputs = document.querySelectorAll('input[name="mlRate"]');
+      mlRateInputs.forEach(input => {
+        input.addEventListener('change', function() {
+          if (this.checked && currentPlatform === 'mercado-livre') {
+            document.getElementById('platformFeeRate').value = formatNumber(parseFloat(this.value));
+            // 如果有销售价格，重新计算
+            const sellingPrice = document.getElementById('sellingPrice').value;
+            if (sellingPrice && parseNumber(sellingPrice) > 0) {
+              calculateProfit();
+            }
+          }
+        });
+      });
+      
+      // 添加taxa de nota fiscal同步监听器
+      document.getElementById('invoiceRate').addEventListener('blur', function() {
+        const invoiceRateValue = parseNumber(this.value);
+        Object.keys(platformConfigs).forEach(platform => {
+          if (platform !== 'personalizado') {
+            platformConfigs[platform].invoiceRate = invoiceRateValue;
+          }
+        });
+      });
+      
+      // Initialize with default platform
+      selectPlatform('mercado-livre');
+    });
+  </script>
+</body>
+</html>
