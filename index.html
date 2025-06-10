@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Plataformas</title>
+    <title>Calculadora de Lucro - Sistema de Plataformas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -207,15 +207,6 @@
 <body class="font-inter bg-gray-50 text-gray-500 min-h-screen">
     <!-- 主要内容区域 -->
     <div class="flex-1 flex flex-col min-h-screen">
-        <!-- 顶部导航栏 -->
-        <header class="bg-white shadow-sm sticky top-0 z-40">
-            <div class="px-4 py-3">
-                <div class="flex items-center justify-between">
-                    <div>
-            </div>
-                </div>
-            </div>
-        </header>
     
     <!-- 底部平台选择导航 -->
         <nav class="mobile-nav">
@@ -398,15 +389,7 @@
         </div>
       </div>
       
-      <!-- Área lateral direita - Histórico e informações -->
-      <div class="w-[28rem]">
-        <!-- Informações da plataforma -->
-        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-          <h3 class="text-lg font-semibold text-gray-500 mb-4">Informações da Plataforma</h3>
-          <div id="platformInfo" class="text-sm text-gray-400">
-            <!-- Informações específicas da plataforma serão inseridas aqui -->
-          </div>
-        </div>
+
         
         <!-- Histórico de cálculos -->
         <div class="bg-white rounded-xl shadow-sm p-6">
@@ -497,8 +480,6 @@
       // Update title
       document.getElementById('platformTitle').textContent = `${config.name} - Calculadora de Lucro`;
       
-      // Update platform info
-      document.getElementById('platformInfo').textContent = config.info;
       
       // Update form values
       document.getElementById('invoiceRate').value = formatNumber(config.invoiceRate);
