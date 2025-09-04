@@ -221,6 +221,35 @@
         margin-top: 0.5rem;
       }
       
+      /* 移动端字段位置交换 - Taxa de Nota Fiscal 和 Preço de Venda */
+      /* 针对表单容器内的字段重新排序 */
+      .bg-white.rounded-xl.shadow-sm.p-4.mb-6 .flex.flex-col.gap-3 {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      /* 交换第二行和第三行的位置 */
+      /* 第二行：Preço de Custo + Taxa de Nota Fiscal */
+      .bg-white.rounded-xl.shadow-sm.p-4.mb-6 .flex.flex-col.gap-3 > .flex:nth-child(2) {
+        order: 3;
+      }
+      
+      /* 第三行：Preço de Venda + Frete */
+      .bg-white.rounded-xl.shadow-sm.p-4.mb-6 .flex.flex-col.gap-3 > .flex:nth-child(3) {
+        order: 2;
+      }
+      
+      /* 在交换后的行内，交换左右字段的位置 */
+      /* 原第二行（现在是第三行）：交换 Preço de Custo 和 Taxa de Nota Fiscal */
+      .bg-white.rounded-xl.shadow-sm.p-4.mb-6 .flex.flex-col.gap-3 > .flex:nth-child(2) {
+        flex-direction: row-reverse;
+      }
+      
+      /* 原第三行（现在是第二行）：交换 Preço de Venda 和 Frete */
+      .bg-white.rounded-xl.shadow-sm.p-4.mb-6 .flex.flex-col.gap-3 > .flex:nth-child(3) {
+        flex-direction: row-reverse;
+      }
+      
       /* 移动端主内容区域调整 */
       .flex-1.flex.flex-col {
         width: 100%;
@@ -257,26 +286,35 @@
     
     /* 移动端平台选择样式 */
     .platform-tab-mobile.active {
-      background-color: #3b82f6;
-      color: white;
+      background-color: #eff6ff !important;
+      color: #2563eb !important;
+      border: 1px solid #bfdbfe !important;
     }
     
-    .platform-tab-mobile.active i {
-      color: white !important;
+    .platform-tab-mobile.active .w-8 {
+      background-color: #2563eb !important;
     }
     
-    .platform-tab-mobile.active .bg-blue-100 {
-      background-color: rgba(255, 255, 255, 0.2) !important;
-      color: white !important;
+    .platform-tab-mobile.active span {
+      color: #2563eb !important;
+      font-weight: 600 !important;
     }
     
-    .platform-tab-mobile.active .bg-purple-100,
-    .platform-tab-mobile.active .bg-red-100,
-    .platform-tab-mobile.active .bg-orange-100,
-    .platform-tab-mobile.active .bg-yellow-100,
-    .platform-tab-mobile.active .bg-gray-100 {
-      background-color: rgba(255, 255, 255, 0.2) !important;
-      color: white !important;
+    /* 移动端导航项悬停效果 */
+    .platform-tab-mobile:hover {
+      background-color: #f9fafb !important;
+      transform: translateX(2px);
+    }
+    
+    /* 移动端图标容器样式 */
+    .platform-tab-mobile .w-8 {
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* 移动端侧边栏背景 */
+    #mobileSidebar .relative {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     }
   </style>
 </head>
@@ -440,61 +478,75 @@
           </div>
           
           <!-- 平台选择菜单 -->
-          <nav class="flex-1 p-4">
-            <ul class="space-y-2">
+          <nav class="flex-1 p-3">
+            <ul class="space-y-1">
               <!-- Mercado Livre -->
               <li>
-                <a href="#" onclick="selectPlatform('mercado-livre'); closeMobileMenu()" id="nav-mercado-livre-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors active">
-                  <i class="fa fa-shopping-cart mr-2 text-base text-blue-500"></i>
-                  <span>Mercado Livre</span>
+                <a href="#" onclick="selectPlatform('mercado-livre'); closeMobileMenu()" id="nav-mercado-livre-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 active bg-blue-50 text-blue-600 border border-blue-100">
+                  <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fa fa-shopping-cart text-white text-sm"></i>
+                  </div>
+                  <span class="font-medium">Mercado Livre</span>
                 </a>
               </li>
               
               <!-- SHEIN -->
               <li>
-                <a href="#" onclick="selectPlatform('shein'); closeMobileMenu()" id="nav-shein-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <div class="w-5 h-5 bg-black text-white text-xs font-bold rounded mr-2 flex items-center justify-center">S</div>
-                  <span>SHEIN</span>
+                <a href="#" onclick="selectPlatform('shein'); closeMobileMenu()" id="nav-shein-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-all duration-200">
+                  <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center mr-3">
+                    <span class="text-white text-xs font-bold">S</span>
+                  </div>
+                  <span class="font-medium">SHEIN</span>
                 </a>
               </li>
               
               <!-- TIKTOK -->
               <li>
-                <a href="#" onclick="selectPlatform('tiktok'); closeMobileMenu()" id="nav-tiktok-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <i class="fa-brands fa-tiktok mr-2 text-base text-black"></i>
-                  <span>TIKTOK</span>
+                <a href="#" onclick="selectPlatform('tiktok'); closeMobileMenu()" id="nav-tiktok-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-all duration-200">
+                  <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center mr-3">
+                    <i class="fa-brands fa-tiktok text-white text-sm"></i>
+                  </div>
+                  <span class="font-medium">TIKTOK</span>
                 </a>
               </li>
               
               <!-- SHOPEE -->
               <li>
-                <a href="#" onclick="selectPlatform('shopee'); closeMobileMenu()" id="nav-shopee-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <i class="fa fa-shopping-bag mr-2 text-base text-orange-500"></i>
-                  <span>SHOPEE</span>
+                <a href="#" onclick="selectPlatform('shopee'); closeMobileMenu()" id="nav-shopee-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-all duration-200">
+                  <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fa fa-shopping-bag text-white text-sm"></i>
+                  </div>
+                  <span class="font-medium">SHOPEE</span>
                 </a>
               </li>
               
               <!-- Magalu -->
               <li>
-                <a href="#" onclick="selectPlatform('magalu'); closeMobileMenu()" id="nav-magalu-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <span class="inline-flex items-center justify-center w-5 h-5 bg-blue-600 text-white text-xs font-bold rounded mr-2">M</span>
-                  <span>Magalu</span>
+                <a href="#" onclick="selectPlatform('magalu'); closeMobileMenu()" id="nav-magalu-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-all duration-200">
+                  <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                    <span class="text-white text-xs font-bold">M</span>
+                  </div>
+                  <span class="font-medium">Magalu</span>
                 </a>
               </li>
               
               <!-- Amazon -->
               <li>
-                <a href="#" onclick="selectPlatform('amazon'); closeMobileMenu()" id="nav-amazon-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <i class="fa-brands fa-amazon mr-2 text-base text-yellow-600"></i>
-                  <span>Amazon</span>
+                <a href="#" onclick="selectPlatform('amazon'); closeMobileMenu()" id="nav-amazon-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-all duration-200">
+                  <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fa-brands fa-amazon text-white text-sm"></i>
+                  </div>
+                  <span class="font-medium">Amazon</span>
                 </a>
               </li>
               
               <!-- Personalizado -->
               <li>
-                <a href="#" onclick="selectPlatform('personalizado'); closeMobileMenu()" id="nav-personalizado-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <i class="fa fa-cog mr-2 text-base text-gray-500"></i>
-                  <span>Personalizado</span>
+                <a href="#" onclick="selectPlatform('personalizado'); closeMobileMenu()" id="nav-personalizado-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-700 transition-all duration-200">
+                  <div class="w-8 h-8 bg-gray-500 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fa fa-cog text-white text-sm"></i>
+                  </div>
+                  <span class="font-medium">Personalizado</span>
                 </a>
               </li>
             </ul>
