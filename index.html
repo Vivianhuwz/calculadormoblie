@@ -403,10 +403,10 @@
             
             <!-- 操作按钮区域 -->
             <div class="flex space-x-2 md:space-x-3">
-              <button onclick="clearAllInputs()" class="px-3 py-2 md:px-4 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200 transition-colors text-sm md:text-base">
-                <i class="fa fa-refresh mr-1 md:mr-2"></i><span class="hidden sm:inline">Limpar Tudo</span><span class="sm:hidden">Limpar</span>
+              <button onclick="clearAllInputs()" class="px-3 py-2 md:px-3 md:py-2 bg-gray-100 text-gray-500 rounded-lg hover:bg-gray-200 transition-colors text-sm md:text-base">
+                <i class="fa fa-refresh mr-0 md:mr-2"></i><span class="hidden md:inline">Limpar Tudo</span>
               </button>
-              <button onclick="exportHistory()" class="px-3 py-2 md:px-4 bg-info text-white rounded-lg hover:bg-info/90 transition-colors btn-info text-sm md:text-base">
+              <button onclick="exportHistory()" class="hidden md:flex px-3 py-2 md:px-4 bg-info text-white rounded-lg hover:bg-info/90 transition-colors btn-info text-sm md:text-base">
                 <i class="fa fa-download mr-1 md:mr-2"></i><span class="hidden sm:inline">Exportar</span><span class="sm:hidden">Export</span>
               </button>
             </div>
@@ -444,64 +444,57 @@
             <ul class="space-y-2">
               <!-- Mercado Livre -->
               <li>
-                <a href="#" onclick="selectPlatform('mercado-livre'); closeMobileMenu()" id="nav-mercado-livre-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors active">
-                  <i class="fa fa-shopping-cart mr-3 text-lg text-blue-500"></i>
+                <a href="#" onclick="selectPlatform('mercado-livre'); closeMobileMenu()" id="nav-mercado-livre-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors active">
+                  <i class="fa fa-shopping-cart mr-2 text-base text-blue-500"></i>
                   <span>Mercado Livre</span>
-                  <span class="ml-auto bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">ML</span>
                 </a>
               </li>
               
               <!-- SHEIN -->
               <li>
-                <a href="#" onclick="selectPlatform('shein'); closeMobileMenu()" id="nav-shein-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <div class="w-6 h-6 bg-black text-white text-sm font-bold rounded mr-3 flex items-center justify-center">S</div>
+                <a href="#" onclick="selectPlatform('shein'); closeMobileMenu()" id="nav-shein-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+                  <div class="w-5 h-5 bg-black text-white text-xs font-bold rounded mr-2 flex items-center justify-center">S</div>
                   <span>SHEIN</span>
-                  <span class="ml-auto bg-purple-100 text-black-600 text-xs px-2 py-1 rounded-full">SH</span>
                 </a>
               </li>
               
               <!-- TIKTOK -->
               <li>
-                <a href="#" onclick="selectPlatform('tiktok'); closeMobileMenu()" id="nav-tiktok-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <i class="fa-brands fa-tiktok mr-3 text-lg text-black"></i>
+                <a href="#" onclick="selectPlatform('tiktok'); closeMobileMenu()" id="nav-tiktok-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+                  <i class="fa-brands fa-tiktok mr-2 text-base text-black"></i>
                   <span>TIKTOK</span>
-                  <span class="ml-auto bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">TK</span>
                 </a>
               </li>
               
               <!-- SHOPEE -->
               <li>
-                <a href="#" onclick="selectPlatform('shopee'); closeMobileMenu()" id="nav-shopee-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <i class="fa fa-shopping-bag mr-3 text-lg text-orange-500"></i>
+                <a href="#" onclick="selectPlatform('shopee'); closeMobileMenu()" id="nav-shopee-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+                  <i class="fa fa-shopping-bag mr-2 text-base text-orange-500"></i>
                   <span>SHOPEE</span>
-                  <span class="ml-auto bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">SP</span>
                 </a>
               </li>
               
               <!-- Magalu -->
               <li>
-                <a href="#" onclick="selectPlatform('magalu'); closeMobileMenu()" id="nav-magalu-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <span class="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-sm font-bold rounded mr-3">M</span>
+                <a href="#" onclick="selectPlatform('magalu'); closeMobileMenu()" id="nav-magalu-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+                  <span class="inline-flex items-center justify-center w-5 h-5 bg-blue-600 text-white text-xs font-bold rounded mr-2">M</span>
                   <span>Magalu</span>
-                  <span class="ml-auto bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">MG</span>
                 </a>
               </li>
               
               <!-- Amazon -->
               <li>
-                <a href="#" onclick="selectPlatform('amazon'); closeMobileMenu()" id="nav-amazon-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <i class="fa-brands fa-amazon mr-3 text-lg text-yellow-600"></i>
+                <a href="#" onclick="selectPlatform('amazon'); closeMobileMenu()" id="nav-amazon-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+                  <i class="fa-brands fa-amazon mr-2 text-base text-yellow-600"></i>
                   <span>Amazon</span>
-                  <span class="ml-auto bg-yellow-100 text-yellow-600 text-xs px-2 py-1 rounded-full">AM</span>
                 </a>
               </li>
               
               <!-- Personalizado -->
               <li>
-                <a href="#" onclick="selectPlatform('personalizado'); closeMobileMenu()" id="nav-personalizado-mobile" class="platform-tab-mobile nav-item flex items-center px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
-                  <i class="fa fa-cog mr-3 text-lg text-gray-500"></i>
+                <a href="#" onclick="selectPlatform('personalizado'); closeMobileMenu()" id="nav-personalizado-mobile" class="platform-tab-mobile nav-item flex items-center px-3 py-2.5 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-50 hover:text-gray-500 transition-colors">
+                  <i class="fa fa-cog mr-2 text-base text-gray-500"></i>
                   <span>Personalizado</span>
-                  <span class="ml-auto bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">PS</span>
                 </a>
               </li>
             </ul>
