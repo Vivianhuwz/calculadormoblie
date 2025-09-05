@@ -227,28 +227,7 @@
         display: flex;
         flex-direction: column;
       }
-      
-      /* 交换第二行和第三行的位置 */
-      /* 第二行：Preço de Custo + Taxa de Nota Fiscal */
-      .bg-white.rounded-xl.shadow-sm.p-4.mb-6 .flex.flex-col.gap-3 > .flex:nth-child(2) {
-        order: 3;
-      }
-      
-      /* 第三行：Preço de Venda + Frete */
-      .bg-white.rounded-xl.shadow-sm.p-4.mb-6 .flex.flex-col.gap-3 > .flex:nth-child(3) {
-        order: 2;
-      }
-      
-      /* 在交换后的行内，交换左右字段的位置 */
-      /* 原第二行（现在是第三行）：交换 Preço de Custo 和 Taxa de Nota Fiscal */
-      .bg-white.rounded-xl.shadow-sm.p-4.mb-6 .flex.flex-col.gap-3 > .flex:nth-child(2) {
-        flex-direction: row-reverse;
-      }
-      
-      /* 原第三行（现在是第二行）：交换 Preço de Venda 和 Frete */
-      .bg-white.rounded-xl.shadow-sm.p-4.mb-6 .flex.flex-col.gap-3 > .flex:nth-child(3) {
-        flex-direction: row-reverse;
-      }
+
       
       /* 移动端主内容区域调整 */
       .flex-1.flex.flex-col {
